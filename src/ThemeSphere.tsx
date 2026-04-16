@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from 'react'
+import { useRef, useEffect, useState, useCallback, useMemo } from 'react'
 import { accentPresets, type AccentPresetId } from './theme'
 
 interface Props {
@@ -6,21 +6,26 @@ interface Props {
   onChange: (id: AccentPresetId) => void
 }
 
-// ── Constants ──────────────────────────────────────────────────
-const W    = 198
-const CX   = W / 2
-const CY   = W / 2
-const R    = 86
-const FOCAL = 342
-const PAD  = 16        // minimum gap from screen edge
-const POS_KEY = 'tsphere-pos'
+type Layout = { W: number; R: number; focal: number; pad: number; dotPx: number }
 
-// ── Fibonacci sphere dot positions ────────────────────────────
-const DOT_POS = (() => {
+function getLayout(viewportW: number): Layout {
+  if (viewportW < 400) {
+    return { W: 128, R: 56, focal: 240, pad: 10, dotPx: 18 }
+  }
+  if (viewportW < 560) {
+    return { W: 152, R: 66, focal: 300, pad: 12, dotPx: 20 }
+  }
+  return { W: 198, R: 86, focal: 342, pad: 16, dotPx: 24 }
+}
+
+function widgetStackHeight(W: number) {
+  return W + 48
+}
+
+function fibonacciSphere(count: number, r: number) {
   const phi = (1 + Math.sqrt(5)) / 2
-  const r = R * 0.86
-  return accentPresets.map((_, i) => {
-    const theta = Math.acos(1 - 2 * (i + 0.5) / accentPresets.length)
+  return Array.from({ length: count }, (_, i) => {
+    const theta = Math.acos(1 - 2 * (i + 0.5) / count)
     const az = (2 * Math.PI * i) / phi
     return {
       x: Math.sin(theta) * Math.cos(az) * r,
@@ -28,31 +33,28 @@ const DOT_POS = (() => {
       z: Math.sin(theta) * Math.sin(az) * r,
     }
   })
-})()
+}
 
-// ── Sphere wireframe mesh ──────────────────────────────────────
-const MESH = (() => {
-  const LAT = 11, LON = 18
+function buildMesh(lat: number, lon: number, R: number) {
   const pts: { x: number; y: number; z: number }[] = []
   const segs: [number, number][] = []
-  for (let la = 0; la <= LAT; la++) {
-    const phi = (la / LAT) * Math.PI
-    for (let lo = 0; lo < LON; lo++) {
-      const theta = (lo / LON) * 2 * Math.PI
+  for (let la = 0; la <= lat; la++) {
+    const phi = (la / lat) * Math.PI
+    for (let lo = 0; lo < lon; lo++) {
+      const theta = (lo / lon) * 2 * Math.PI
       pts.push({
         x: R * Math.sin(phi) * Math.cos(theta),
         y: R * Math.cos(phi),
         z: R * Math.sin(phi) * Math.sin(theta),
       })
-      const idx = la * LON + lo
-      segs.push([idx, la * LON + ((lo + 1) % LON)])
-      if (la < LAT) segs.push([idx, (la + 1) * LON + lo])
+      const idx = la * lon + lo
+      segs.push([idx, la * lon + ((lo + 1) % lon)])
+      if (la < lat) segs.push([idx, (la + 1) * lon + lo])
     }
   }
   return { pts, segs }
-})()
+}
 
-// ── Math helpers ───────────────────────────────────────────────
 function rotP(x: number, y: number, z: number, rxDeg: number, ryDeg: number) {
   const ry = (ryDeg * Math.PI) / 180
   const rx = (rxDeg * Math.PI) / 180
@@ -63,22 +65,26 @@ function rotP(x: number, y: number, z: number, rxDeg: number, ryDeg: number) {
   return { x: x1, y: y2, z: z2 }
 }
 
-function proj(x: number, y: number, z: number) {
-  const s = FOCAL / (FOCAL + z + R * 0.4)
-  return { sx: CX + x * s, sy: CY - y * s }
+function proj(
+  x: number, y: number, z: number,
+  focal: number, R: number, cx: number, cy: number,
+) {
+  const s = focal / (focal + z + R * 0.4)
+  return { sx: cx + x * s, sy: cy - y * s }
 }
 
-// ── Position helpers ───────────────────────────────────────────
-// Returns the snapped X for the nearest left or right edge
-function snapX(currentX: number): number {
-  const leftX  = PAD
-  const rightX = window.innerWidth - W - PAD
-  return currentX + W / 2 < window.innerWidth / 2 ? leftX : rightX
+function snapX(currentX: number, winW: number, W: number, pad: number) {
+  const leftX = pad
+  const rightX = winW - W - pad
+  return currentX + W / 2 < winW / 2 ? leftX : rightX
 }
 
-function clampY(y: number): number {
-  return Math.max(PAD, Math.min(window.innerHeight - W - PAD - 30, y))
+function clampY(y: number, winH: number, W: number, pad: number) {
+  const h = widgetStackHeight(W)
+  return Math.max(pad, Math.min(winH - h - pad, y))
 }
+
+const POS_KEY = 'tsphere-pos'
 
 function savePos(x: number, y: number) {
   try { localStorage.setItem(POS_KEY, JSON.stringify({ x, y })) } catch { /* */ }
@@ -95,27 +101,34 @@ function loadPos(): { x: number; y: number } | null {
   return null
 }
 
-// ── Component ──────────────────────────────────────────────────
 export function ThemeSphere({ value, onChange }: Props) {
-  const canvasRef      = useRef<HTMLCanvasElement>(null)
-  const widgetRef      = useRef<HTMLDivElement>(null)
-  const dotRefs        = useRef<(HTMLButtonElement | null)[]>([])
-  const rotX           = useRef(15)
-  const rotY           = useRef(0)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const widgetRef = useRef<HTMLDivElement>(null)
+  const dotRefs = useRef<(HTMLButtonElement | null)[]>([])
+  const rotX = useRef(15)
+  const rotY = useRef(0)
   const draggingSphere = useRef(false)
   const draggingWidget = useRef(false)
-  const lastMouse      = useRef({ x: 0, y: 0 })
-  const widgetOffset   = useRef({ x: 0, y: 0 })
-  const posRef         = useRef({ x: 0, y: 0 })
-  const rafRef         = useRef<number | undefined>(undefined)
-  const clickGuard     = useRef(false)
-  const valueRef       = useRef(value)
+  const lastClient = useRef({ x: 0, y: 0 })
+  const widgetOffset = useRef({ x: 0, y: 0 })
+  const posRef = useRef({ x: 0, y: 0 })
+  const rafRef = useRef<number | undefined>(undefined)
+  const clickGuard = useRef(false)
+  const valueRef = useRef(value)
+  const layoutRef = useRef<Layout>(getLayout(1024))
 
+  const [layout, setLayout] = useState<Layout>(() => getLayout(1024))
   const [ready, setReady] = useState(false)
 
   useEffect(() => { valueRef.current = value }, [value])
+  useEffect(() => { layoutRef.current = layout }, [layout])
 
-  // ── Apply position directly to DOM (zero React re-renders) ──
+  const mesh = useMemo(() => buildMesh(11, 18, layout.R), [layout.R])
+  const dotPositions = useMemo(
+    () => fibonacciSphere(accentPresets.length, layout.R * 0.86),
+    [layout.R],
+  )
+
   const applyPos = useCallback((x: number, y: number, animate: boolean) => {
     posRef.current = { x, y }
     const el = widgetRef.current
@@ -124,73 +137,98 @@ export function ThemeSphere({ value, onChange }: Props) {
       ? 'left 0.5s cubic-bezier(0.22,1,0.36,1), top 0.4s cubic-bezier(0.22,1,0.36,1)'
       : 'none'
     el.style.left = `${x}px`
-    el.style.top  = `${y}px`
+    el.style.top = `${y}px`
   }, [])
 
-  // ── Init: load saved position or default to right edge ──────
-  useEffect(() => {
-    const saved = loadPos()
+  /** Prefer bottom corner on phones so it does not cover the profile photo */
+  function defaultPosition(L: Layout, vw: number, vh: number, saved: { x: number; y: number } | null) {
     if (saved) {
-      // Re-snap saved position to the correct edge (in case window resized)
-      posRef.current = {
-        x: snapX(saved.x),
-        y: clampY(saved.y),
+      let x = snapX(saved.x, vw, L.W, L.pad)
+      let y = clampY(saved.y, vh, L.W, L.pad)
+      if (vw < 680) {
+        const minY = vh - widgetStackHeight(L.W) - L.pad
+        y = Math.max(y, minY)
       }
-    } else {
-      posRef.current = {
-        x: window.innerWidth - W - PAD,
-        y: clampY(window.innerHeight / 2 - W / 2),
-      }
+      return { x, y }
     }
+    const x = snapX(vw - L.W - L.pad, vw, L.W, L.pad)
+    const y =
+      vw < 680
+        ? vh - widgetStackHeight(L.W) - L.pad
+        : clampY(vh / 2 - widgetStackHeight(L.W) / 2, vh, L.W, L.pad)
+    return { x, y }
+  }
+
+  useEffect(() => {
+    const vw = window.innerWidth
+    const vh = window.innerHeight
+    const L = getLayout(vw)
+    setLayout(L)
+    const p = defaultPosition(L, vw, vh, loadPos())
+    posRef.current = p
     setReady(true)
   }, [])
 
-  // After mount, apply the initial position to the DOM
   useEffect(() => {
     if (ready) applyPos(posRef.current.x, posRef.current.y, false)
   }, [ready, applyPos])
 
-  // ── Canvas render tick ──────────────────────────────────────
+  useEffect(() => {
+    function onResize() {
+      const vw = window.innerWidth
+      const vh = window.innerHeight
+      const L = getLayout(vw)
+      setLayout(L)
+      let x = snapX(posRef.current.x, vw, L.W, L.pad)
+      let y = clampY(posRef.current.y, vh, L.W, L.pad)
+      if (vw < 680) {
+        y = Math.max(y, vh - widgetStackHeight(L.W) - L.pad)
+      }
+      posRef.current = { x, y }
+      applyPos(x, y, false)
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [applyPos])
+
   const tick = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
+    const { W, R, focal } = layoutRef.current
+    const cx = W / 2
+    const cy = W / 2
     const rx = rotX.current
     const ry = rotY.current
 
     ctx.clearRect(0, 0, W, W)
 
-    // Sphere background
-    const bg = ctx.createRadialGradient(CX - 20, CY - 26, 4, CX, CY, R)
-    bg.addColorStop(0,    '#1e2a4a')
+    const bg = ctx.createRadialGradient(cx - 20, cy - 26, 4, cx, cy, R)
+    bg.addColorStop(0, '#1e2a4a')
     bg.addColorStop(0.55, '#0d1225')
-    bg.addColorStop(1,    '#05080f')
+    bg.addColorStop(1, '#05080f')
     ctx.beginPath()
-    ctx.arc(CX, CY, R, 0, Math.PI * 2)
+    ctx.arc(cx, cy, R, 0, Math.PI * 2)
     ctx.fillStyle = bg
     ctx.fill()
 
-    // Clip to sphere circle
     ctx.save()
     ctx.beginPath()
-    ctx.arc(CX, CY, R - 0.5, 0, Math.PI * 2)
+    ctx.arc(cx, cy, R - 0.5, 0, Math.PI * 2)
     ctx.clip()
 
-    // Project all mesh vertices once
-    const projected = MESH.pts.map((p) => {
+    const projected = mesh.pts.map((p) => {
       const r = rotP(p.x, p.y, p.z, rx, ry)
-      return { ...proj(r.x, r.y, r.z), z: r.z }
+      return { ...proj(r.x, r.y, r.z, focal, R, cx, cy), z: r.z }
     })
 
-    // ── Batch segments into 4 depth buckets → only 4 stroke calls ──
-    // (previously ~350 individual stroke() calls per frame)
     const NBUCKETS = 4
     type Line = { ax: number; ay: number; bx: number; by: number }
     const buckets: Line[][] = Array.from({ length: NBUCKETS }, () => [])
 
-    for (const [a, b] of MESH.segs) {
+    for (const [a, b] of mesh.segs) {
       const pa = projected[a]
       const pb = projected[b]
       const t = ((pa.z + pb.z) / 2 + R) / (2 * R)
@@ -215,38 +253,39 @@ export function ThemeSphere({ value, onChange }: Props) {
 
     ctx.restore()
 
-    // Outer glow ring
     ctx.beginPath()
-    ctx.arc(CX, CY, R, 0, Math.PI * 2)
+    ctx.arc(cx, cy, R, 0, Math.PI * 2)
     ctx.strokeStyle = 'rgba(80,110,220,0.18)'
     ctx.lineWidth = 1.2
     ctx.stroke()
 
-    // ── Update color-dot buttons via direct DOM ─────────────────
-    DOT_POS.forEach((p, i) => {
+    const dotPx = layoutRef.current.dotPx
+    dotPositions.forEach((p, i) => {
       const btn = dotRefs.current[i]
       if (!btn) return
       const r = rotP(p.x, p.y, p.z, rx, ry)
-      const { sx, sy } = proj(r.x, r.y, r.z)
+      const { sx, sy } = proj(r.x, r.y, r.z, focal, R, cx, cy)
       const t = (r.z + R) / (2 * R)
       const visible = r.z > -R * 0.3
       const opacity = visible ? (0.35 + 0.65 * Math.max(0, t)).toFixed(3) : '0'
-      const scale   = visible ? (0.6  + 0.4  * Math.max(0, t)).toFixed(3) : '0.2'
-      btn.style.left         = `${sx.toFixed(1)}px`
-      btn.style.top          = `${sy.toFixed(1)}px`
-      btn.style.opacity      = opacity
-      btn.style.transform    = `translate(-50%,-50%) scale(${scale})`
+      const scale = visible ? (0.6 + 0.4 * Math.max(0, t)).toFixed(3) : '0.2'
+      btn.style.width = `${dotPx}px`
+      btn.style.height = `${dotPx}px`
+      btn.style.margin = `${-dotPx / 2}px 0 0 ${-dotPx / 2}px`
+      btn.style.left = `${sx.toFixed(1)}px`
+      btn.style.top = `${sy.toFixed(1)}px`
+      btn.style.opacity = opacity
+      btn.style.transform = `translate(-50%,-50%) scale(${scale})`
       btn.style.pointerEvents = visible ? 'auto' : 'none'
-      btn.style.zIndex       = String(Math.round(r.z + R + 1))
-      const preset   = accentPresets[i]
+      btn.style.zIndex = String(Math.round(r.z + R + 1))
+      const preset = accentPresets[i]
       const isActive = preset.id === valueRef.current
       btn.style.boxShadow = isActive
         ? `0 0 0 3px rgba(255,255,255,0.92), 0 0 16px 4px ${preset.dark}`
         : `0 2px 8px rgba(0,0,0,0.55)`
     })
-  }, [])
+  }, [mesh, dotPositions])
 
-  // ── Animation loop ──────────────────────────────────────────
   useEffect(() => {
     let last = performance.now()
     function frame(now: number) {
@@ -257,25 +296,35 @@ export function ThemeSphere({ value, onChange }: Props) {
       rafRef.current = requestAnimationFrame(frame)
     }
     rafRef.current = requestAnimationFrame(frame)
-    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current) }
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    }
   }, [tick])
 
-  // ── Global pointer events ───────────────────────────────────
   useEffect(() => {
-    function onMove(e: MouseEvent) {
+    function clientXY(e: PointerEvent) {
+      return { x: e.clientX, y: e.clientY }
+    }
+
+    function onMove(e: PointerEvent) {
+      if (draggingSphere.current || draggingWidget.current) {
+        e.preventDefault()
+      }
       if (draggingSphere.current) {
-        const dx = e.clientX - lastMouse.current.x
-        const dy = e.clientY - lastMouse.current.y
+        const { x, y } = clientXY(e)
+        const dx = x - lastClient.current.x
+        const dy = y - lastClient.current.y
         if (Math.abs(dx) + Math.abs(dy) > 2) clickGuard.current = true
         rotY.current += dx * 0.45
         rotX.current += dy * 0.45
-        lastMouse.current = { x: e.clientX, y: e.clientY }
+        lastClient.current = { x, y }
       }
       if (draggingWidget.current) {
-        // Move freely while dragging — no snapping yet
+        const { x, y } = clientXY(e)
+        const L = layoutRef.current
         applyPos(
-          e.clientX - widgetOffset.current.x,
-          clampY(e.clientY - widgetOffset.current.y),
+          x - widgetOffset.current.x,
+          clampY(y - widgetOffset.current.y, window.innerHeight, L.W, L.pad),
           false,
         )
       }
@@ -283,9 +332,14 @@ export function ThemeSphere({ value, onChange }: Props) {
 
     function onUp() {
       if (draggingWidget.current) {
-        // Snap to the nearest left or right edge with animation
-        const sx = snapX(posRef.current.x)
-        const sy = clampY(posRef.current.y)
+        const L = layoutRef.current
+        const vw = window.innerWidth
+        const vh = window.innerHeight
+        const sx = snapX(posRef.current.x, vw, L.W, L.pad)
+        let sy = clampY(posRef.current.y, vh, L.W, L.pad)
+        if (vw < 680) {
+          sy = Math.max(sy, vh - widgetStackHeight(L.W) - L.pad)
+        }
         applyPos(sx, sy, true)
         savePos(sx, sy)
       }
@@ -293,24 +347,28 @@ export function ThemeSphere({ value, onChange }: Props) {
       draggingWidget.current = false
     }
 
-    window.addEventListener('mousemove', onMove)
-    window.addEventListener('mouseup',   onUp)
+    window.addEventListener('pointermove', onMove, { passive: false })
+    window.addEventListener('pointerup', onUp)
+    window.addEventListener('pointercancel', onUp)
     return () => {
-      window.removeEventListener('mousemove', onMove)
-      window.removeEventListener('mouseup',   onUp)
+      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerup', onUp)
+      window.removeEventListener('pointercancel', onUp)
     }
   }, [applyPos])
 
-  function onCanvasDown(e: React.MouseEvent) {
+  function onCanvasPointerDown(e: React.PointerEvent) {
     e.preventDefault()
     draggingSphere.current = true
     clickGuard.current = false
-    lastMouse.current = { x: e.clientX, y: e.clientY }
+    lastClient.current = { x: e.clientX, y: e.clientY }
   }
 
-  function onHandleDown(e: React.MouseEvent) {
+  function onHandlePointerDown(e: React.PointerEvent) {
     e.preventDefault()
+    e.stopPropagation()
     draggingWidget.current = true
+    lastClient.current = { x: e.clientX, y: e.clientY }
     widgetOffset.current = {
       x: e.clientX - posRef.current.x,
       y: e.clientY - posRef.current.y,
@@ -325,16 +383,21 @@ export function ThemeSphere({ value, onChange }: Props) {
       className="tsphere-widget"
       style={{ left: posRef.current.x, top: posRef.current.y }}
     >
-      <div className="tsphere-handle" onMouseDown={onHandleDown} title="Drag to reposition">
+      <div
+        className="tsphere-handle"
+        onPointerDown={onHandlePointerDown}
+        title="Drag to reposition"
+      >
         <span className="tsphere-handle-grip">⠿</span>
         <span className="tsphere-handle-label">Theme</span>
       </div>
 
-      <div className="tsphere-container" onMouseDown={onCanvasDown}>
-        <canvas ref={canvasRef} width={W} height={W} className="tsphere-canvas" />
+      <div className="tsphere-container" onPointerDown={onCanvasPointerDown}>
+        <canvas ref={canvasRef} width={layout.W} height={layout.W} className="tsphere-canvas" />
         {accentPresets.map((preset, i) => (
           <button
             key={preset.id}
+            type="button"
             ref={(el) => { dotRefs.current[i] = el }}
             className="tsphere-dot"
             style={{ backgroundColor: preset.dark }}

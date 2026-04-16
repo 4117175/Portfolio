@@ -1151,6 +1151,8 @@ main { flex: 1; }
   align-items: center;
   gap: 0.25rem;
   user-select: none;
+  touch-action: none;
+  -webkit-user-select: none;
 }
 
 /* Minimal drag grip */
@@ -1159,6 +1161,7 @@ main { flex: 1; }
   align-items: center;
   gap: 0.3rem;
   cursor: grab;
+  touch-action: none;
   padding: 0.18rem 0.55rem;
   border-radius: 99px;
   background: rgba(255, 255, 255, 0.07);
@@ -1184,6 +1187,7 @@ main { flex: 1; }
 .tsphere-container {
   position: relative;
   cursor: grab;
+  touch-action: none;
   line-height: 0;
   border-radius: 50%;
   box-shadow: 0 0 30px rgba(80, 110, 220, 0.18), 0 6px 20px rgba(0,0,0,0.45);
