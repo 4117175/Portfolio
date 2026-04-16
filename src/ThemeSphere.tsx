@@ -8,14 +8,32 @@ interface Props {
 
 type Layout = { W: number; R: number; focal: number; pad: number; dotPx: number }
 
+/** Below this width: smaller sphere (40% off) + mobile corner bias */
+const MOBILE_MAX_W = 767
+
+/** Full-size sphere on desktop / wide browser windows */
+const DESKTOP_LAYOUT: Layout = {
+  W: 198,
+  R: 86,
+  focal: 342,
+  pad: 16,
+  dotPx: 24,
+}
+
+/** Mobile: 40% smaller than desktop (= ×0.6) */
+const MOBILE_SCALE = 0.6
+
 function getLayout(viewportW: number): Layout {
-  if (viewportW < 400) {
-    return { W: 128, R: 56, focal: 240, pad: 10, dotPx: 18 }
+  if (viewportW > MOBILE_MAX_W) {
+    return DESKTOP_LAYOUT
   }
-  if (viewportW < 560) {
-    return { W: 152, R: 66, focal: 300, pad: 12, dotPx: 20 }
+  return {
+    W: Math.round(DESKTOP_LAYOUT.W * MOBILE_SCALE),
+    R: Math.round(DESKTOP_LAYOUT.R * MOBILE_SCALE),
+    focal: Math.round(DESKTOP_LAYOUT.focal * MOBILE_SCALE),
+    pad: 12,
+    dotPx: Math.max(12, Math.round(DESKTOP_LAYOUT.dotPx * MOBILE_SCALE)),
   }
-  return { W: 198, R: 86, focal: 342, pad: 16, dotPx: 24 }
 }
 
 function widgetStackHeight(W: number) {
@@ -145,7 +163,7 @@ export function ThemeSphere({ value, onChange }: Props) {
     if (saved) {
       let x = snapX(saved.x, vw, L.W, L.pad)
       let y = clampY(saved.y, vh, L.W, L.pad)
-      if (vw < 680) {
+      if (vw <= MOBILE_MAX_W) {
         const minY = vh - widgetStackHeight(L.W) - L.pad
         y = Math.max(y, minY)
       }
@@ -153,7 +171,7 @@ export function ThemeSphere({ value, onChange }: Props) {
     }
     const x = snapX(vw - L.W - L.pad, vw, L.W, L.pad)
     const y =
-      vw < 680
+      vw <= MOBILE_MAX_W
         ? vh - widgetStackHeight(L.W) - L.pad
         : clampY(vh / 2 - widgetStackHeight(L.W) / 2, vh, L.W, L.pad)
     return { x, y }
@@ -181,7 +199,7 @@ export function ThemeSphere({ value, onChange }: Props) {
       setLayout(L)
       let x = snapX(posRef.current.x, vw, L.W, L.pad)
       let y = clampY(posRef.current.y, vh, L.W, L.pad)
-      if (vw < 680) {
+      if (vw <= MOBILE_MAX_W) {
         y = Math.max(y, vh - widgetStackHeight(L.W) - L.pad)
       }
       posRef.current = { x, y }
@@ -337,7 +355,7 @@ export function ThemeSphere({ value, onChange }: Props) {
         const vh = window.innerHeight
         const sx = snapX(posRef.current.x, vw, L.W, L.pad)
         let sy = clampY(posRef.current.y, vh, L.W, L.pad)
-        if (vw < 680) {
+        if (vw <= MOBILE_MAX_W) {
           sy = Math.max(sy, vh - widgetStackHeight(L.W) - L.pad)
         }
         applyPos(sx, sy, true)
