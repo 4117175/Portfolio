@@ -1,9 +1,9 @@
 import { useRef, useEffect, useState, useCallback } from 'react'
-import { accentPresets } from './theme'
+import { accentPresets, type AccentPresetId } from './theme'
 
 interface Props {
-  value: string
-  onChange: (id: string) => void
+  value: AccentPresetId
+  onChange: (id: AccentPresetId) => void
 }
 
 // ── Constants ──────────────────────────────────────────────────
@@ -107,7 +107,7 @@ export function ThemeSphere({ value, onChange }: Props) {
   const lastMouse      = useRef({ x: 0, y: 0 })
   const widgetOffset   = useRef({ x: 0, y: 0 })
   const posRef         = useRef({ x: 0, y: 0 })
-  const rafRef         = useRef<number>()
+  const rafRef         = useRef<number | undefined>(undefined)
   const clickGuard     = useRef(false)
   const valueRef       = useRef(value)
 
