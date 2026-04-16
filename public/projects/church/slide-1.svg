@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f1623"/><stop offset="100%" stop-color="#0d1117"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="750" fill="url(#bg)"/>
+  <rect width="1200" height="46" fill="#1c2133"/>
+  <circle cx="22" cy="23" r="7" fill="#ff5f57"/><circle cx="42" cy="23" r="7" fill="#febc2e"/><circle cx="62" cy="23" r="7" fill="#28c840"/>
+  <rect x="120" y="12" width="700" height="22" rx="11" fill="#252d45"/>
+  <text x="470" y="28" font-family="system-ui,sans-serif" font-size="12" fill="#5a6480">localhost:8080/login</text>
+  <!-- Login Card -->
+  <rect x="400" y="140" width="400" height="460" rx="16" fill="#1e2640"/>
+  <text x="600" y="210" font-family="system-ui,sans-serif" font-size="20" font-weight="700" fill="#e8ecf4" text-anchor="middle">Church Management</text>
+  <text x="600" y="238" font-family="system-ui,sans-serif" font-size="13" fill="#6b7494" text-anchor="middle">Sign in to your account</text>
+  <text x="424" y="284" font-family="system-ui,sans-serif" font-size="12" fill="#8892b0">Username</text>
+  <rect x="420" y="294" width="360" height="40" rx="8" fill="#252d45"/>
+  <text x="436" y="319" font-family="system-ui,sans-serif" font-size="13" fill="#5a6480">admin@church.org</text>
+  <text x="424" y="360" font-family="system-ui,sans-serif" font-size="12" fill="#8892b0">Password</text>
+  <rect x="420" y="370" width="360" height="40" rx="8" fill="#252d45"/>
+  <text x="436" y="395" font-family="system-ui,sans-serif" font-size="13" fill="#5a6480">••••••••</text>
+  <rect x="420" y="434" width="360" height="44" rx="8" fill="#3b4fd8"/>
+  <text x="600" y="461" font-family="system-ui,sans-serif" font-size="14" font-weight="600" fill="#fff" text-anchor="middle">Sign In</text>
+  <text x="600" y="520" font-family="system-ui,sans-serif" font-size="12" fill="#6b7494" text-anchor="middle">Forgot password?</text>
+  <text x="600" y="700" font-family="system-ui,sans-serif" font-size="13" fill="rgba(255,255,255,0.15)" text-anchor="middle">Replace with actual screenshot — /public/projects/church/slide-1.svg</text>
+</svg>

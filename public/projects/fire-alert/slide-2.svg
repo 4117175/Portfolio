@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="1000" viewBox="0 0 600 1000">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a0f0f"/><stop offset="100%" stop-color="#0d1117"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="1000" fill="url(#bg)"/>
+  <rect width="600" height="44" fill="#1a1f30"/>
+  <text x="20" y="28" font-family="system-ui,sans-serif" font-size="12" fill="#e8ecf4">9:41</text>
+  <text x="520" y="28" font-family="system-ui,sans-serif" font-size="12" fill="#e8ecf4">●●● 100%</text>
+  <rect x="0" y="44" width="600" height="60" fill="#1e2133"/>
+  <text x="300" y="80" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#e8ecf4" text-anchor="middle">Report Emergency</text>
+  <!-- Form -->
+  <text x="40" y="138" font-family="system-ui,sans-serif" font-size="12" fill="#8892b0">Your Location (Auto-detected)</text>
+  <rect x="40" y="148" width="520" height="48" rx="10" fill="#1e2133" stroke="#3b4fd8" stroke-width="1.5"/>
+  <text x="58" y="178" font-family="system-ui,sans-serif" font-size="13" fill="#c5cee0">📍 Brgy. San Jose, City of Malolos, Bulacan</text>
+  <text x="40" y="222" font-family="system-ui,sans-serif" font-size="12" fill="#8892b0">Describe the Emergency</text>
+  <rect x="40" y="232" width="520" height="100" rx="10" fill="#1e2133"/>
+  <text x="58" y="258" font-family="system-ui,sans-serif" font-size="13" fill="#c5cee0">Fire started at the 2nd floor of the</text>
+  <text x="58" y="278" font-family="system-ui,sans-serif" font-size="13" fill="#c5cee0">residential building near the barangay hall.</text>
+  <text x="58" y="298" font-family="system-ui,sans-serif" font-size="13" fill="#c5cee0">Smoke is spreading rapidly.</text>
+  <text x="40" y="360" font-family="system-ui,sans-serif" font-size="12" fill="#8892b0">Upload Photo Evidence</text>
+  <rect x="40" y="370" width="520" height="120" rx="10" fill="#1e2133" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="6"/>
+  <text x="300" y="420" font-family="system-ui,sans-serif" font-size="36" text-anchor="middle">📷</text>
+  <text x="300" y="460" font-family="system-ui,sans-serif" font-size="13" fill="#6b7494" text-anchor="middle">Tap to attach a photo</text>
+  <text x="40" y="518" font-family="system-ui,sans-serif" font-size="12" fill="#8892b0">Emergency Level</text>
+  <rect x="40" y="528" width="160" height="44" rx="10" fill="#7f1d1d"/>
+  <text x="120" y="555" font-family="system-ui,sans-serif" font-size="13" fill="#fca5a5" text-anchor="middle">🔴 Critical</text>
+  <rect x="212" y="528" width="160" height="44" rx="10" fill="#1e2133"/>
+  <text x="292" y="555" font-family="system-ui,sans-serif" font-size="13" fill="#6b7494" text-anchor="middle">🟡 High</text>
+  <rect x="384" y="528" width="160" height="44" rx="10" fill="#1e2133"/>
+  <text x="464" y="555" font-family="system-ui,sans-serif" font-size="13" fill="#6b7494" text-anchor="middle">🟢 Medium</text>
+  <rect x="40" y="606" width="520" height="56" rx="14" fill="#ef4444"/>
+  <text x="300" y="640" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">SUBMIT EMERGENCY REPORT</text>
+  <text x="300" y="960" font-family="system-ui,sans-serif" font-size="11" fill="rgba(255,255,255,0.15)" text-anchor="middle">Replace with actual screenshot</text>
+</svg>

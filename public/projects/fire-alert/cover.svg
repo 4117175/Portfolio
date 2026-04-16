@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a0f0f"/><stop offset="100%" stop-color="#0d1117"/>
+    </linearGradient>
+    <linearGradient id="phone" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1e2133"/><stop offset="100%" stop-color="#161a2a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="750" fill="url(#bg)"/>
+  <text x="600" y="80" font-family="system-ui,sans-serif" font-size="26" font-weight="700" fill="#e8ecf4" text-anchor="middle">Fire Alert System</text>
+  <text x="600" y="110" font-family="system-ui,sans-serif" font-size="14" fill="#6b7494" text-anchor="middle">Mobile Application — Emergency Reporting Platform</text>
+  <!-- Phone 1 - Home -->
+  <rect x="140" y="130" width="240" height="480" rx="28" fill="#1a1f30" stroke="#2a3050" stroke-width="2"/>
+  <rect x="155" y="150" width="210" height="440" rx="18" fill="url(#phone)"/>
+  <rect x="220" y="135" width="80" height="12" rx="6" fill="#2a3050"/>
+  <text x="260" y="198" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#e8ecf4" text-anchor="middle">FireAlert</text>
+  <text x="260" y="218" font-family="system-ui,sans-serif" font-size="10" fill="#6b7494" text-anchor="middle">Emergency Response App</text>
+  <rect x="175" y="240" width="170" height="70" rx="12" fill="#7f1d1d" opacity=".85"/>
+  <text x="260" y="275" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#fca5a5" text-anchor="middle">🔥 REPORT FIRE</text>
+  <text x="260" y="295" font-family="system-ui,sans-serif" font-size="10" fill="#fca5a5" text-anchor="middle">Tap to report emergency</text>
+  <rect x="175" y="326" width="170" height="50" rx="12" fill="#1e3a5f" opacity=".85"/>
+  <text x="260" y="356" font-family="system-ui,sans-serif" font-size="12" fill="#93c5fd" text-anchor="middle">📋 My Reports</text>
+  <rect x="175" y="386" width="170" height="50" rx="12" fill="#1e3a5f" opacity=".85"/>
+  <text x="260" y="416" font-family="system-ui,sans-serif" font-size="12" fill="#93c5fd" text-anchor="middle">🔔 Active Alerts</text>
+  <!-- Phone 2 - Report Form -->
+  <rect x="480" y="100" width="240" height="520" rx="28" fill="#1a1f30" stroke="#ef4444" stroke-width="2"/>
+  <rect x="495" y="120" width="210" height="480" rx="18" fill="url(#phone)"/>
+  <rect x="540" y="106" width="80" height="12" rx="6" fill="#2a3050"/>
+  <text x="600" y="165" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#e8ecf4" text-anchor="middle">Report Emergency</text>
+  <text x="510" y="195" font-family="system-ui,sans-serif" font-size="10" fill="#8892b0">Location</text>
+  <rect x="507" y="204" width="186" height="34" rx="7" fill="#252d45"/>
+  <text x="518" y="226" font-family="system-ui,sans-serif" font-size="10" fill="#5a6480">Detecting location...</text>
+  <text x="510" y="256" font-family="system-ui,sans-serif" font-size="10" fill="#8892b0">Description</text>
+  <rect x="507" y="265" width="186" height="60" rx="7" fill="#252d45"/>
+  <text x="518" y="283" font-family="system-ui,sans-serif" font-size="10" fill="#5a6480">Describe the emergency...</text>
+  <text x="510" y="342" font-family="system-ui,sans-serif" font-size="10" fill="#8892b0">Upload Photo Evidence</text>
+  <rect x="507" y="351" width="186" height="60" rx="7" fill="#252d45" stroke="#ef4444" stroke-width="1" stroke-dasharray="4"/>
+  <text x="600" y="385" font-family="system-ui,sans-serif" font-size="20" fill="#ef4444" text-anchor="middle">📷</text>
+  <rect x="507" y="428" width="186" height="38" rx="8" fill="#ef4444"/>
+  <text x="600" y="452" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">SUBMIT REPORT</text>
+  <!-- Phone 3 - Alert List -->
+  <rect x="820" y="130" width="240" height="480" rx="28" fill="#1a1f30" stroke="#2a3050" stroke-width="2"/>
+  <rect x="835" y="150" width="210" height="440" rx="18" fill="url(#phone)"/>
+  <rect x="880" y="135" width="80" height="12" rx="6" fill="#2a3050"/>
+  <text x="940" y="198" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#e8ecf4" text-anchor="middle">Active Alerts</text>
+  <rect x="845" y="213" width="190" height="60" rx="10" fill="#7f1d1d" opacity=".7"/>
+  <text x="855" y="232" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#fca5a5">🔥 VERIFIED</text>
+  <text x="855" y="250" font-family="system-ui,sans-serif" font-size="10" fill="#fca5a5">Brgy. San Jose, Malolos</text>
+  <text x="855" y="265" font-family="system-ui,sans-serif" font-size="9" fill="#9ca3af">2 min ago</text>
+  <rect x="845" y="283" width="190" height="60" rx="10" fill="#1e2640"/>
+  <text x="855" y="302" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#fbbf24">⏳ PENDING</text>
+  <text x="855" y="320" font-family="system-ui,sans-serif" font-size="10" fill="#c5cee0">Brgy. Tikay, Malolos</text>
+  <text x="855" y="335" font-family="system-ui,sans-serif" font-size="9" fill="#9ca3af">5 min ago</text>
+  <rect x="845" y="353" width="190" height="60" rx="10" fill="#1e2640"/>
+  <text x="855" y="372" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#6b7494">✓ RESOLVED</text>
+  <text x="855" y="390" font-family="system-ui,sans-serif" font-size="10" fill="#c5cee0">Brgy. Longos, Malolos</text>
+  <text x="855" y="405" font-family="system-ui,sans-serif" font-size="9" fill="#9ca3af">22 min ago</text>
+  <text x="600" y="700" font-family="system-ui,sans-serif" font-size="13" fill="rgba(255,255,255,0.15)" text-anchor="middle">Replace with actual screenshot — /public/projects/fire-alert/cover.svg</text>
+</svg>

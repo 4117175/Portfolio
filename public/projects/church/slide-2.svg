@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f1623"/><stop offset="100%" stop-color="#0d1117"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="750" fill="url(#bg)"/>
+  <rect width="1200" height="46" fill="#1c2133"/>
+  <circle cx="22" cy="23" r="7" fill="#ff5f57"/><circle cx="42" cy="23" r="7" fill="#febc2e"/><circle cx="62" cy="23" r="7" fill="#28c840"/>
+  <rect x="120" y="12" width="700" height="22" rx="11" fill="#252d45"/>
+  <text x="470" y="28" font-family="system-ui,sans-serif" font-size="12" fill="#5a6480">localhost:8080/schedule</text>
+  <rect x="0" y="46" width="200" height="704" fill="#161c2c"/>
+  <text x="16" y="82" font-family="system-ui,sans-serif" font-size="13" fill="#6b7494">Dashboard</text>
+  <text x="16" y="116" font-family="system-ui,sans-serif" font-size="13" fill="#6b7494">Transactions</text>
+  <rect x="8" y="130" width="184" height="36" rx="6" fill="#3b4fd8" opacity=".9"/>
+  <text x="20" y="153" font-family="system-ui,sans-serif" font-size="13" fill="#fff">Schedule</text>
+  <text x="16" y="196" font-family="system-ui,sans-serif" font-size="13" fill="#6b7494">Announcements</text>
+  <!-- Calendar grid -->
+  <text x="232" y="88" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#e8ecf4">Event Schedule — June 2025</text>
+  <rect x="232" y="104" width="120" height="32" rx="6" fill="#3b4fd8"/>
+  <text x="280" y="125" font-family="system-ui,sans-serif" font-size="12" fill="#fff" text-anchor="middle">+ Add Event</text>
+  <!-- Calendar -->
+  <rect x="232" y="150" width="950" height="40" rx="6" fill="#252d45"/>
+  <text x="265" y="175" font-family="system-ui,sans-serif" font-size="12" fill="#8892b0">Sun</text>
+  <text x="400" y="175" font-family="system-ui,sans-serif" font-size="12" fill="#8892b0">Mon</text>
+  <text x="535" y="175" font-family="system-ui,sans-serif" font-size="12" fill="#8892b0">Tue</text>
+  <text x="670" y="175" font-family="system-ui,sans-serif" font-size="12" fill="#8892b0">Wed</text>
+  <text x="805" y="175" font-family="system-ui,sans-serif" font-size="12" fill="#8892b0">Thu</text>
+  <text x="950" y="175" font-family="system-ui,sans-serif" font-size="12" fill="#8892b0">Fri</text>
+  <!-- Calendar rows -->
+  <rect x="232" y="200" width="130" height="90" rx="4" fill="#1e2640"/><text x="348" y="224" font-family="system-ui,sans-serif" font-size="14" fill="#6b7494" text-anchor="end">1</text>
+  <rect x="370" y="200" width="130" height="90" rx="4" fill="#1e2640"/><text x="486" y="224" font-family="system-ui,sans-serif" font-size="14" fill="#6b7494" text-anchor="end">2</text>
+  <rect x="508" y="200" width="130" height="90" rx="4" fill="#1e2640"/>
+  <rect x="646" y="200" width="130" height="90" rx="4" fill="#1e2640"/>
+  <rect x="784" y="200" width="130" height="90" rx="4" fill="#1e2640"/>
+  <rect x="922" y="200" width="130" height="90" rx="4" fill="#1e2640"/>
+  <rect x="232" y="298" width="130" height="90" rx="4" fill="#1e2640"/>
+  <rect x="508" y="218" width="110" height="22" rx="4" fill="#3b4fd8" opacity=".8"/>
+  <text x="514" y="233" font-family="system-ui,sans-serif" font-size="10" fill="#fff">Youth Fellowship</text>
+  <rect x="646" y="218" width="110" height="22" rx="4" fill="#10b981" opacity=".8"/>
+  <text x="652" y="233" font-family="system-ui,sans-serif" font-size="10" fill="#fff">Bible Study</text>
+  <text x="600" y="700" font-family="system-ui,sans-serif" font-size="13" fill="rgba(255,255,255,0.15)" text-anchor="middle">Replace with actual screenshot — /public/projects/church/slide-2.svg</text>
+</svg>
