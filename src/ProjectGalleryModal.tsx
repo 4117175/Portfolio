@@ -10,6 +10,11 @@ interface Props {
 
 const ANIM_DURATION = 280
 
+function resolveAssetUrl(url: string) {
+  if (/^https?:\/\//.test(url) || url.startsWith('data:')) return url
+  return `${import.meta.env.BASE_URL}${url.replace(/^\//, '')}`
+}
+
 export function ProjectGalleryModal({ project, onClose }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [closing, setClosing] = useState(false)
@@ -124,7 +129,7 @@ export function ProjectGalleryModal({ project, onClose }: Props) {
             {slide && (
               <img
                 key={slide.src}
-                src={slide.src}
+                src={resolveAssetUrl(slide.src)}
                 alt={slide.caption}
                 className="gallery-img"
                 draggable={false}
@@ -157,7 +162,7 @@ export function ProjectGalleryModal({ project, onClose }: Props) {
                 onClick={() => setIndex(i)}
                 aria-label={`Image ${i + 1}`}
               >
-                <img src={g.src} alt="" draggable={false} />
+                <img src={resolveAssetUrl(g.src)} alt="" draggable={false} />
               </button>
             ))}
           </div>

@@ -12,6 +12,11 @@ import bgVideo from './assets/video/BG-Animation.mp4'
 type Job = (typeof workExperience)[number]
 type Project = (typeof projects)[number]
 
+function resolveAssetUrl(url: string) {
+  if (/^https?:\/\//.test(url) || url.startsWith('data:')) return url
+  return `${import.meta.env.BASE_URL}${url.replace(/^\//, '')}`
+}
+
 function App() {
   const { presetId, setPresetId } = useAccentTheme()
   const [activeJob, setActiveJob] = useState<Job | null>(null)
@@ -56,7 +61,7 @@ function App() {
               <aside className="hero-profile" aria-label="Profile">
                 <img
                   className="hero-photo"
-                  src={site.photo}
+                  src={resolveAssetUrl(site.photo)}
                   alt={site.name}
                   loading="eager"
                   decoding="async"
@@ -117,7 +122,7 @@ function App() {
                     aria-haspopup="dialog"
                   >
                     <div className="proj-card-cover">
-                      <img src={p.cover} alt={p.name} loading="lazy" draggable={false} />
+                      <img src={resolveAssetUrl(p.cover)} alt={p.name} loading="lazy" draggable={false} />
                       <div className="proj-card-overlay">
                         <span className="proj-card-view">View Gallery</span>
                       </div>
@@ -155,7 +160,7 @@ function App() {
                   Send an Email
                 </a>
                 <a
-                  href={site.cv}
+                  href={resolveAssetUrl(site.cv)}
                   download
                   className="contact-btn contact-btn--secondary"
                 >
