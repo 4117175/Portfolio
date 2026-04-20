@@ -180,8 +180,19 @@ export const projects = [
         caption: 'About Us page — company history, mission, and social media links with an image carousel, fully manageable from the admin side.',
       },
       {
-        src: '/projects/pfc-website/slide-4.jpg',
-        caption: 'Admin panel — non-technical staff can add, edit, delete, and reorder Events & Announcements, Products, and Careers using a simple drag-and-drop interface.',
+        src: '/corp4.jpg',
+        caption:
+          'Premium Feeds Admin — Events & Announcements: manage CSR and company events in a table with cover images, ordering, status, and actions (including a Photos gallery per event).',
+      },
+      {
+        src: '/corp5.jpg',
+        caption:
+          'Premium Feeds Admin — Products: drag-and-drop ordering, product images, categories (Hogs / Broiler), and per-product Variants, Edit, and Delete controls.',
+      },
+      {
+        src: '/corp6.jpg',
+        caption:
+          'Premium Feeds Admin — Careers / Job Postings: manage listings with job title, location, display order, active status, and Edit / Delete actions.',
       },
     ],
   },
