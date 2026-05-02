@@ -160,6 +160,7 @@ export const projects = [
     name: 'Premium Feeds Corporation — Corporate Website',
     type: 'Professional Project',
     tech: 'HTML · CSS · JavaScript · PHP · PHPMailer · MySQL',
+    href: 'https://premiumfeeds.com.ph/',
     description: 'A full corporate website built for Premium Feeds Corporation, featuring a public-facing site with a hero section, Products & Services catalog, Events and Announcements, About Us, Careers, and Contact pages. The system includes a custom admin panel where non-technical staff can manage all website content — adding, editing, and reordering Products, Events, and Announcements through a drag-and-drop interface — without writing any code. PHPMailer handles contact form submissions.',
     cover: '/projects/pfc-website/cover.jpg',
     gallery: [
